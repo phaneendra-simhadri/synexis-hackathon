@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SYNEXIS Ultimate Question Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0b0b;
+      --bg-soft: #131313;
+      --panel: #171717;
+      --panel-2: #202020;
+      --text: #f3f3f3;
+      --muted: #b3b3b3;
+      --accent: #d9d9d9;
+      --accent-2: #bfbfbf;
+      --ok: #d0d0d0;
+      --warn: #d0d0d0;
+      --border: #3a3a3a;
+      --radius: 14px;
+      --radius-lg: 18px;
+      --space: 18px;
+      --shadow-xl: 0 20px 50px rgba(0, 0, 0, .30);
+      --shadow-md: 0 10px 26px rgba(0, 0, 0, .22);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+          margin: 0;
+          font-family: "Space Grotesk", sans-serif;
+          color: var(--text);
+          background:
+            radial-gradient(circle at 10% 15%, #1f1f1f 0%, transparent 40%),
+            radial-gradient(circle at 85% 10%, #2a2a2a 0%, transparent 30%),
+            linear-gradient(160deg, var(--bg), #101010 45%, #151515 100%);
+          min-height: 100vh;
+          line-height: 1.75;
+        }
+
+        .wrap {
+          max-width: 1180px;
+          margin: 0 auto;
+          padding: 24px 18px 50px;
+        }
+
+        .hero {
+          border: 1px solid var(--border);
+          border-radius: 24px;
+          padding: 26px;
+          background: linear-gradient(140deg, rgba(255,255,255,.06), rgba(190,190,190,.05));
+          position: relative;
+          overflow: hidden;
+          box-shadow: var(--shadow-xl);
+        }
+
+        .hero::after {
+          content: "";
+          position: absolute;
+          width: 180px;
+          height: 180px;
+          border-radius: 50%;
+          background: rgba(220, 220, 220, 0.14);
+          top: -60px;
+          right: -60px;
+          filter: blur(2px);
+          pointer-events: none;
+        }
+
+        h1 { margin: 0 0 8px; font-size: 34px; line-height: 1.08; letter-spacing: -.01em; }
+        .sub { margin: 0; color: var(--muted); font-size: 15px; max-width: 820px; }
+
+
+        .search-wrap {
+          margin-top: 12px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 8px;
+          align-items: center;
+        }
+
+        .search-wrap input {
+          margin: 0;
+          background: rgba(22, 22, 22, .94);
+          border: 1px solid var(--border);
+          color: var(--text);
+        }
+
+        .search-note {
+          font-size: 12px;
+          color: var(--muted);
+          white-space: nowrap;
+        }
+
+        .page-nav {
+          display: flex;
+          justify-content: flex-end;
+          margin-bottom: 12px;
+          position: relative;
+          z-index: 2;
+        }
+
+        .page-link {
+          display: inline-block;
+          border: 1px solid var(--border);
+          color: var(--text);
+          background: #1a1a1a;
+          border-radius: 999px;
+          padding: 8px 14px;
+          font-size: 13px;
+          text-decoration: none;
+          transition: transform .2s ease, background .2s ease;
+        }
+
+        .page-link:hover {
+          transform: translateY(-1px);
+          background: #262626;
+        }
+
+        .tabs {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin: 18px 0 22px;
+          position: sticky;
+          top: 10px;
+          z-index: 8;
+          background: rgba(18, 18, 18, .85);
+          backdrop-filter: blur(8px);
+          padding: 8px;
+          border: 1px solid rgba(74, 74, 74, .7);
+          border-radius: 14px;
+        }
+
+        .tab {
+          border: 1px solid var(--border);
+          color: var(--muted);
+          background: #1a1a1a;
+          border-radius: 999px;
+          padding: 9px 14px;
+          font-family: inherit;
+          font-size: 13px;
+          cursor: pointer;
+          transition: transform .2s ease, background .2s ease;
+        }
+
+        .tab:hover { transform: translateY(-1px); }
+
+        .tab.active {
+          color: #111111;
+          background: var(--accent);
+          border-color: transparent;
+          font-weight: 700;
+        }
+
+        .workspace {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 0;
+          align-items: start;
+        }
+
+        .content-col { min-width: 0; margin: 0 auto; width: 100%; }
+        .reading-width { max-width: 1100px; margin: 0 auto; width: 100%; }
+
+        .coach { display: none; }
+        .coach-btn { display: none; }
+        .coach-list { display: none; }
+
+        .panel { display: none; }
+        .panel.active { display: block; animation: fade .25s ease; }
+        @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+        .panel-head {
+          margin-bottom: 14px;
+          padding: 14px;
+          border: 1px solid var(--border);
+          border-radius: var(--radius);
+          background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(40,40,40,.35));
+        }
+
+        .panel-head h2 { margin: 0 0 4px; font-size: 24px; letter-spacing: -.01em; }
+        .panel-head p { margin: 0; color: var(--muted); font-size: 14px; }
+
+        .card {
+          background: linear-gradient(180deg, var(--panel), var(--panel-2));
+          border: 1px solid var(--border);
+          border-radius: var(--radius-lg);
+          padding: 24px;
+          margin-bottom: 18px;
+          box-shadow: var(--shadow-md);
+        }
+
+        .card h3 { margin: 0 0 14px; font-size: 21px; letter-spacing: -.01em; font-weight: 600; }
+        .card p, .card li { color: var(--muted); font-size: 16px; line-height: 1.8; }
+        .card ul { margin: 14px 0 0; padding-left: 22px; }
+        .card li { margin-bottom: 9px; }
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 12px;
+        }
+
+        .tight-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 10px;
+        }
+
+        .mono {
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 13px;
+          background: #111111;
+          border: 1px solid #3a3a3a;
+          border-radius: 12px;
+          padding: 14px;
+          white-space: pre-wrap;
+          color: #e6e6e6;
+          line-height: 1.8;
+        }
+
+        input, select {
+          width: 100%;
+          background: #141414;
+          color: var(--text);
+          border: 1px solid var(--border);
+          border-radius: 11px;
+          padding: 10px 11px;
+          font-family: inherit;
+          margin-top: 7px;
+          margin-bottom: 4px;
+        }
+
+        button.btn {
+          margin-top: 8px;
+          border: 1px solid var(--border);
+          background: #262626;
+          color: var(--text);
+          border-radius: 11px;
+          padding: 9px 13px;
+          font-family: inherit;
+          cursor: pointer;
+          margin-right: 6px;
+        }
+
+        button.btn:hover { filter: brightness(1.12); }
+
+        .result {
+          margin-top: 8px;
+          border-radius: 12px;
+          padding: 10px 11px;
+          font-size: 13px;
+          background: #1a1a1a;
+          border: 1px solid var(--border);
+          color: #dfdfdf;
+          white-space: pre-wrap;
+        }
+
+        .ok { color: var(--ok); }
+        .warn { color: var(--warn); }
+
+        .qopt {
+          width: 100%;
+          text-align: left;
+          margin-bottom: 8px;
+          background: #1a1a1a;
+          border: 1px solid var(--border);
+          color: var(--text);
+          border-radius: 11px;
+          padding: 10px;
+          font-family: inherit;
+          cursor: pointer;
+        }
+
+        .qopt.correct { background: rgba(255,255,255,.12); border-color: #8e8e8e; }
+        .qopt.wrong { background: rgba(255,255,255,.06); border-color: #6b6b6b; }
+
+        .line {
+          height: 8px;
+          background: #222222;
+          border: 1px solid var(--border);
+          border-radius: 999px;
+          overflow: hidden;
+          margin-top: 8px;
+        }
+
+        .fill {
+          height: 100%;
+          width: 0%;
+          background: linear-gradient(90deg, var(--accent), var(--accent-2));
+          transition: width .3s ease;
+        }
+
+        .role { border-left: 4px solid var(--accent); }
+        .small { font-size: 12px; color: var(--muted); }
+
+        .value-tag {
+          display: inline-block;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: .05em;
+          text-transform: uppercase;
+          color: #101010;
+          background: var(--accent-2);
+          border-radius: 999px;
+          padding: 4px 9px;
+          margin-bottom: 10px;
+        }
+
+        .pillar {
+          border: 1px solid var(--border);
+          border-radius: 14px;
+          padding: 18px;
+          background: rgba(32, 32, 32, .82);
+          margin-bottom: 12px;
+        }
+
+        .pillar h4 { margin: 0 0 8px; font-size: 18px; font-weight: 600; }
+        .pillar p, .pillar li { font-size: 15px; line-height: 1.7; }
+        .pillar ul { margin: 8px 0 0; padding-left: 20px; }
+
+        .pillars-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 10px;
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          gap: 10px;
+          margin-top: 8px;
+        }
+
+        .info-box {
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 16px;
+          background: rgba(28, 28, 28, .82);
+        }
+
+        .info-box h4 { margin: 0 0 10px; font-size: 16px; color: #e5e5e5; font-weight: 600; }
+        .info-box p, .info-box li { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+        .info-box ul { margin: 0; padding-left: 20px; }
+        .info-box li { margin-bottom: 6px; }
+
+        .divider {
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(220,220,220,.6), transparent);
+          margin: 16px 0;
+        }
+
+        .hint {
+          margin-top: 8px;
+          border-left: 3px solid var(--accent);
+          padding: 6px 10px;
+          background: rgba(255, 255, 255, .06);
+          color: #e1e1e1;
+          font-size: 13px;
+          border-radius: 8px;
+        }
+
+        @media (max-width: 980px) {
+          .workspace { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 700px) {
+          h1 { font-size: 28px; }
+          .hero { padding: 20px; }
+          .tabs { top: 4px; }
+          .card { padding: 14px; }
+          .search-wrap { grid-template-columns: 1fr; }
+          .search-note { white-space: normal; }
+          .reading-width { max-width: none; }
+        }
+      </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="page-nav">
+        <a class="page-link" href="cipher_decoder.html">Open Cipher Decoder</a>
+      </div>
+      <h1>SYNEXIS Participant Command Center</h1>
+      <p class="sub">Built for one goal: maximize score in the 19-hour challenge. Use this guide to decode faster, route tasks smarter, defend during the 3:00 AM cyber round, and submit evidence-backed answers with confidence.</p>
+      <div class="line"><div class="fill" style="width: 100%;"></div></div>
+      <div class="search-wrap">
+        <input id="guide-search" placeholder="Search the full guide (e.g. bfs, base64, anomaly, led polarity)" oninput="filterGuide()" />
+        <div class="search-note" id="search-note">Search across all guide cards instantly.</div>
+      </div>
+    </section>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-panel="win" onclick="openPanel('win', this)">Win Protocol</button>
+      <button class="tab" data-panel="cipher" onclick="openPanel('cipher', this)">🔐 Cipher Tools</button>
+      <button class="tab" data-panel="commands" onclick="openPanel('commands', this)">Commands</button>
+      <button class="tab" data-panel="python" onclick="openPanel('python', this)">Python Code Kit</button>
+      <button class="tab" data-panel="quiz" onclick="openPanel('quiz', this)">Quick Reference</button>
+    </div>
+
+    <div class="workspace">
+      <div class="content-col reading-width">
+
+    <section class="panel active" id="win">
+      <div class="panel-head">
+        <h2>Win Protocol: Score Maximization During The Night</h2>
+        <p>High-performing teams do not solve everything. They solve the right things in the right order with proof-grade submissions.</p>
+      </div>
+
+      <div class="card">
+        <div class="value-tag">Critical Round</div>
+        <h3>3:00 AM Cyber-Attack Response Playbook</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Phase 1: Detect (0-3 min)</h4>
+            <ul>
+              <li>Snapshot abnormal IPs, ports, and processes immediately.</li>
+              <li>Mark timeline start: first suspicious timestamp.</li>
+              <li>Do not kill processes before recording evidence.</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Phase 2: Contain (3-8 min)</h4>
+            <ul>
+              <li>Block malicious source IPs with temporary rules.</li>
+              <li>Isolate compromised node or interface if required.</li>
+              <li>Preserve critical services while isolating attacker path.</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Phase 3: Eradicate (8-14 min)</h4>
+            <ul>
+              <li>Kill malicious process and remove persistence clues.</li>
+              <li>Check listeners and auth logs after cleanup.</li>
+              <li>Re-run scan to confirm threat path is gone.</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Phase 4: Recover (14-20 min)</h4>
+            <ul>
+              <li>Restore expected routes/services.</li>
+              <li>Verify sensor and command outputs are stable.</li>
+              <li>Submit concise incident summary with evidence lines.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="commands">
+      <div class="panel-head">
+        <h2>Command Reference & Output Guide</h2>
+        <p>Critical commands and how to interpret their output to find evidence. Learn what to look for in each type of output.</p>
+      </div>
+      
+      <div class="card">
+        <h3>Command Output Interpreter</h3>
+        <p style="color: var(--muted); font-size: 15px; margin-bottom: 12px;">Click each command to see example output and what indicators to look for.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; margin-bottom: 14px;">
+          <button class="btn" onclick="showCmd('nmap')">nmap -sn</button>
+          <button class="btn" onclick="showCmd('arp')">arp -a</button>
+          <button class="btn" onclick="showCmd('netstat')">netstat -an</button>
+          <button class="btn" onclick="showCmd('top')">top</button>
+        </div>
+        <div class="mono" id="cmd-out" style="margin-bottom:12px;">Click a command above to see example output.</div>
+        <div class="result" id="cmd-note">Red flags and interpretation guide will appear here.</div>
+      </div>
+
+      <div class="card">
+        <h3>Command Reference: What Each Does</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>nmap -sn 192.168.1.0/24</h4>
+            <p><strong>Purpose:</strong> Host discovery. Finds all live IPs in subnet.<br/><strong>Look for:</strong> Unauthorized IPs not in approved list.<br/><strong>Action:</strong> Cross-reference unknown IPs with MAC addresses using arp -a</p>
+          </div>
+          <div class="info-box">
+            <h4>arp -a</h4>
+            <p><strong>Purpose:</strong> IP-to-MAC mapping (ARP table).<br/><strong>Look for:</strong> Duplicate IPs, spoofed MACs from wrong vendor (OUI check).<br/><strong>Action:</strong> Verify MAC vendor prefix against expected ownership.</p>
+          </div>
+          <div class="info-box">
+            <h4>netstat -an | grep ESTABLISHED</h4>
+            <p><strong>Purpose:</strong> Show active network connections.<br/><strong>Look for:</strong> Known ports (22, 80, 443) vs suspicious (4444, 8888).<br/><strong>Action:</strong> Kill unauthorized processes, block suspicious IPs.</p>
+          </div>
+          <div class="info-box">
+            <h4>top or ps aux</h4>
+            <p><strong>Purpose:</strong> Running process list and resource usage.<br/><strong>Look for:</strong> High CPU/memory from unknown processes, processes in /tmp.<br/><strong>Action:</strong> Investigate PID, kill -9 PID, check persistence mechanisms.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Essential Response Commands (Memorize)</h3>
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 14px;">Commands you should know instantly to respond to threats:</p>
+        <div class="mono">\n## Host Discovery
+nmap -sn 192.168.1.0/24
+ping -c 1 192.168.1.47
+arp -a
+
+## Network Analysis
+netstat -an
+netstat -an | grep ESTABLISHED
+netstat -tulpn  (Linux)
+
+## Process Management 
+ps aux
+top
+kill -9 <PID>
+
+## Security Response
+sudo iptables -A INPUT -s 192.168.1.99 -j DROP
+sudo iptables -D INPUT -s 192.168.1.99 -j DROP  (remove rule)
+killall <process_name>
+
+## Logs & Debugging
+tail -f /var/log/auth.log
+grep "Failed" /var/log/auth.log
+grep "192.168.1.99" /var/log/syslog</div>
+      </div>
+
+      <div class="card">
+        <h3>How To Read Output Correctly</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>nmap Output Example</h4>
+            <p><strong>Authorized:</strong> 192.168.1.1, 192.168.1.12, 192.168.1.100<br/><strong>Unknown found:</strong> 192.168.1.47<br/><strong>Action:</strong> Investigate 192.168.1.47 with arp and netstat.</p>
+          </div>
+          <div class="info-box">
+            <h4>arp -a Output Example</h4>
+            <p><strong>Line:</strong> ? (192.168.1.47) at 00:11:22:de:ad:be<br/><strong>Check:</strong> OUI prefix "00:11:22" tells you vendor.<br/><strong>Alert:</strong> If OUI doesn't match expected device type, investigate.</p>
+          </div>
+          <div class="info-box">
+            <h4>netstat Output Example</h4>
+            <p><strong>Good:</strong> tcp 0.0.0.0:22 LISTEN, tcp 0.0.0.0:80 LISTEN<br/><strong>Red flag:</strong> tcp 0.0.0.0:4444 LISTEN, tcp 0.0.0.0:8888 LISTEN<br/><strong>Action:</strong> Find and kill process on suspicious port.</p>
+          </div>
+          <div class="info-box">
+            <h4>top Output Example</h4>
+            <p><strong>Baseline:</strong> Known processes < 10% CPU<br/><strong>Red flag:</strong> /tmp/.hidden/miner at 94% CPU<br/><strong>Action:</strong> kill -9 PID immediately, scan logs for injection point.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>3:00 AM Wicket: Mixed Network + Cyber + IP Playbook</h3>
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">Your wicket moment is when you identify the attacker path fast, cut it cleanly, and submit hard evidence before other teams stabilize.</p>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Trigger Pattern</h4>
+            <p>Unknown IP appears + odd listener port + CPU/process anomaly. Treat this as active compromise until disproven.</p>
+          </div>
+          <div class="info-box">
+            <h4>90-Second Action Chain</h4>
+            <p>Discover hosts -> map IP-to-MAC -> identify open listener -> map PID -> contain source IP -> verify clean state.</p>
+          </div>
+          <div class="info-box">
+            <h4>Evidence You Must Capture</h4>
+            <p>Malicious IP, suspicious port, process PID/name, containment command used, and one post-fix verification output.</p>
+          </div>
+          <div class="info-box">
+            <h4>Wicket-Losing Mistakes</h4>
+            <p>Blocking wrong IP, killing process before evidence, skipping post-fix scan, and submitting without timeline stamps.</p>
+          </div>
+        </div>
+        <div class="mono" style="margin-top: 12px;"># Fast mixed-response chain
+nmap -sn 192.168.1.0/24
+arp -a
+netstat -an | findstr LISTEN          # Windows
+netstat -ano | findstr :4444          # map suspicious port to PID
+tasklist | findstr <PID>              # Windows process lookup
+taskkill /PID <PID> /F                # contain process (Windows)
+
+# Linux alternatives
+ss -tulpen | grep 4444
+ps aux | grep -i suspicious
+sudo iptables -A INPUT -s <ATTACKER_IP> -j DROP</div>
+      </div>
+
+      <div class="card">
+        <h3>IP Intel Quick Triage (3AM Wicket Assistant)</h3>
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">Paste any IPv4 from logs/scan output and instantly classify it with next-step guidance.</p>
+        <label for="ip-intel-input">IPv4 Address</label>
+        <input id="ip-intel-input" placeholder="Example: 192.168.1.47" />
+        <button class="btn" onclick="analyzeIpIntel()">Analyze IP</button>
+        <div class="result" id="ip-intel-out" style="min-height: 74px; margin-top: 10px;">Classification and action guidance will appear here.</div>
+        <div class="hint">Use this before containment to avoid burning points on false positives.</div>
+      </div>
+
+      <div class="card">
+        <h3>Ghost Node Hunt + Sensor Graphing (Fast Workflow)</h3>
+        <p style="color: var(--muted); font-size: 14px; margin-bottom: 12px;">Use this when challenge clues mix unknown network devices with telemetry anomalies in the same wicket.</p>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Ghost Node Detection</h4>
+            <p>Collect live hosts from <strong>nmap</strong>, compare against authorized inventory, and flag unknown nodes as ghost candidates before escalation.</p>
+          </div>
+          <div class="info-box">
+            <h4>Graph The Network</h4>
+            <p>Build a small adjacency map from scan + ARP evidence. Use BFS from gateway to see unreachable islands and suspicious new branches.</p>
+          </div>
+          <div class="info-box">
+            <h4>Graph Sensor Timeline</h4>
+            <p>Plot value vs time quickly to separate drift (gradual slope) from spike/injection (abrupt vertical jump or block).</p>
+          </div>
+          <div class="info-box">
+            <h4>Submission-Ready Evidence</h4>
+            <p>Report: unknown IP, where it connects in graph, anomaly timestamp window, and one line proving post-containment stability.</p>
+          </div>
+        </div>
+        <div class="mono" style="margin-top: 12px;"># Ghost-node first pass
+nmap -sn 192.168.1.0/24
+arp -a
+
+# Sensor quick plot (CSV with time,value)
+python - << 'PY'
+import csv
+rows=[]
+with open('sensor_log.csv', newline='', encoding='utf-8') as f:
+    for r in csv.DictReader(f):
+        rows.append((float(r['time']), float(r['value'])))
+for t,v in rows[:12]:
+    print(f"t={t:>6.1f} | " + ('#' * int(max(v,0))))
+PY</div>
+      </div>
+    </section>
+
+    <section class="panel" id="cipher">
+      <div class="panel-head">
+        <h2>🔐 Cipher Decoder Moved</h2>
+        <p>The full cipher decoder section has been shifted to the dedicated page for cleaner navigation and faster loading here.</p>
+      </div>
+
+      <div class="card">
+        <h3>Go To Dedicated Cipher Decoder Page</h3>
+        <p>The full Advanced Cipher Decoder Hub has been shifted into <strong>cipher_decoder.html</strong>, including ASCII mode and layered decoding guidance.</p>
+        <a class="page-link" href="cipher_decoder.html">Open Full Cipher Decoder</a>
+        <div class="hint" style="margin-top: 12px;">Use this page for strategy and cross-domain prep. Use the dedicated page for all cipher-focused workflows.</div>
+      </div>
+    </section>
+
+      <section class="panel" id="python">
+        <div class="panel-head">
+        <h2>Python Code Kit (Complete Event Pack)</h2>
+        <p>Copy-ready Python snippets for the most likely SYNEXIS tasks: decoding, layered clues, graph/network analysis, anomaly detection, log triage, and clean answer packaging.</p>
+        </div>
+
+        <div class="card">
+        <h3>1) Universal Decode Functions</h3>
+        <div class="mono">import base64
+
+    MORSE = {
+      '.-':'A','-...':'B','-.-.':'C','-..':'D','.':'E','..-.':'F','--.':'G','....':'H','..':'I','.---':'J',
+      '-.-':'K','.-..':'L','--':'M','-.':'N','---':'O','.--.':'P','--.-':'Q','.-.':'R','...':'S','-':'T',
+      '..-':'U','...-':'V','.--':'W','-..-':'X','-.--':'Y','--..':'Z',
+      '-----':'0','.----':'1','..---':'2','...--':'3','....-':'4','.....':'5','-....':'6','--...':'7','---..':'8','----.':'9'
+    }
+
+    def decode_caesar_all(text):
+      out = {}
+      up = text.upper()
+      for s in range(1, 26):
+        out[s] = ''.join(chr((ord(c)-65+s) % 26 + 65) if 'A' <= c <= 'Z' else c for c in up)
+      return out
+
+    def decode_rot13(text):
+      res = []
+      for c in text:
+        if 'A' <= c <= 'Z':
+          res.append(chr((ord(c)-65+13) % 26 + 65))
+        elif 'a' <= c <= 'z':
+          res.append(chr((ord(c)-97+13) % 26 + 97))
+        else:
+          res.append(c)
+      return ''.join(res)
+
+    def decode_base64(text):
+      return base64.b64decode(text).decode('utf-8', errors='replace')
+
+    def decode_binary(text):
+      return ''.join(chr(int(b, 2)) for b in text.split())
+
+    def decode_hex(text):
+      h = ''.join(text.split())
+      return bytes.fromhex(h).decode('utf-8', errors='replace')
+
+    def decode_morse(text):
+      words = text.split(' / ')
+      return ' '.join(''.join(MORSE.get(sym, '?') for sym in w.split()) for w in words)
+
+    def decode_ascii_decimal(text):
+      words = []
+      for part in text.split('/'):
+        nums = [n for n in part.strip().replace(',', ' ').split() if n]
+        words.append(''.join(chr(int(n)) for n in nums))
+      return ' '.join(words)</div>
+        </div>
+
+        <div class="card">
+        <h3>2) Layered Decode Auto-Try</h3>
+        <div class="mono">def layered_try(seed):
+      results = []
+      try:
+        b64 = decode_base64(seed)
+        results.append(('base64', b64))
+        for s, txt in decode_caesar_all(b64).items():
+          if any(w in txt for w in [' THE ', ' AND ', ' CODE', ' NODE', ' SYNC']):
+            results.append((f'base64->caesar({s})', txt))
+      except Exception:
+        pass
+
+      try:
+        hx = decode_hex(seed)
+        results.append(('hex', hx))
+      except Exception:
+        pass
+
+      try:
+        bn = decode_binary(seed)
+        results.append(('binary', bn))
+      except Exception:
+        pass
+
+      try:
+        ms = decode_morse(seed)
+        results.append(('morse', ms))
+      except Exception:
+        pass
+
+      try:
+        ad = decode_ascii_decimal(seed)
+        results.append(('ascii_decimal', ad))
+      except Exception:
+        pass
+
+      return results</div>
+        </div>
+
+        <div class="card">
+        <h3>3) Graph + Path Toolkit (BFS / DFS / Dijkstra)</h3>
+        <div class="mono">from collections import deque
+    import heapq
+
+    def bfs_order(graph, start):
+      q = deque([start])
+      seen = {start}
+      order = []
+      while q:
+        u = q.popleft()
+        order.append(u)
+        for v in graph.get(u, []):
+          if v not in seen:
+            seen.add(v)
+            q.append(v)
+      return order
+
+    def shortest_path_unweighted(graph, src, dst):
+      q = deque([src])
+      parent = {src: None}
+      while q:
+        u = q.popleft()
+        if u == dst:
+          break
+        for v in graph.get(u, []):
+          if v not in parent:
+            parent[v] = u
+            q.append(v)
+      if dst not in parent:
+        return None
+      path = []
+      cur = dst
+      while cur is not None:
+        path.append(cur)
+        cur = parent[cur]
+      return path[::-1]
+
+    def dijkstra(weighted_graph, src):
+      dist = {src: 0}
+      pq = [(0, src)]
+      while pq:
+        d, u = heapq.heappop(pq)
+        if d != dist.get(u):
+          continue
+        for v, w in weighted_graph.get(u, []):
+          nd = d + w
+          if nd < dist.get(v, float('inf')):
+            dist[v] = nd
+            heapq.heappush(pq, (nd, v))
+      return dist</div>
+        </div>
+
+        <div class="card">
+        <h3>4) Sensor + CSV Anomaly Toolkit</h3>
+        <div class="mono">import csv
+    import statistics
+
+    def classify_series(values):
+      if not values:
+        return 'empty'
+      if len(set(values)) == 1:
+        return 'flatline'
+
+      diffs = [values[i+1] - values[i] for i in range(len(values)-1)]
+      if all(d >= 0 for d in diffs) or all(d <= 0 for d in diffs):
+        if abs(values[-1] - values[0]) > 0.2 * (max(values) - min(values) + 1e-9):
+          return 'drift'
+
+      mu = statistics.mean(values)
+      sd = statistics.pstdev(values) if len(values) > 1 else 0
+      if sd > 0:
+        for i, x in enumerate(values):
+          if abs(x - mu) > 3 * sd:
+            return f'spike@{i}'
+
+      return 'normal'
+
+    def load_numeric_column(csv_file, column):
+      vals = []
+      with open(csv_file, newline='', encoding='utf-8') as f:
+        for row in csv.DictReader(f):
+          try:
+            vals.append(float(row[column]))
+          except Exception:
+            pass
+      return vals
+
+    # usage:
+    # series = load_numeric_column('sensor_log.csv', 'temperature')
+    # print(classify_series(series))</div>
+        </div>
+
+        <div class="card">
+        <h3>5) 3AM Cyber Round Log Triage (IP + Port + PID)</h3>
+        <div class="mono">import re
+    from collections import Counter
+
+    IP_RE = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
+    PORT_RE = re.compile(r':(\d{2,5})\b')
+    PID_RE = re.compile(r'\bPID\s*(\d+)\b|\b(\d{3,7})\s*$')
+
+    def extract_artifacts(lines):
+      ips, ports, pids = [], [], []
+      for ln in lines:
+        ips.extend(IP_RE.findall(ln))
+        ports.extend(PORT_RE.findall(ln))
+        m = PID_RE.search(ln)
+        if m:
+          pids.append(m.group(1) or m.group(2))
+      return {
+        'top_ips': Counter(ips).most_common(10),
+        'top_ports': Counter(ports).most_common(10),
+        'pids': sorted(set(pids))
+      }
+
+    def is_private(ip):
+      a, b, c, d = map(int, ip.split('.'))
+      return a == 10 or (a == 172 and 16 <= b <= 31) or (a == 192 and b == 168)
+
+    def suspicious_ips(ips):
+      return [ip for ip in ips if not is_private(ip)]</div>
+        </div>
+
+        <div class="card">
+        <h3>6) Ghost Nodes + Sensor Graph Correlator</h3>
+        <div class="mono">from collections import deque
+
+def ghost_nodes(discovered_hosts, authorized_hosts):
+  auth = set(authorized_hosts)
+  return sorted([ip for ip in discovered_hosts if ip not in auth])
+
+def bfs_component(graph, start):
+  q = deque([start])
+  seen = {start}
+  while q:
+    u = q.popleft()
+    for v in graph.get(u, []):
+      if v not in seen:
+        seen.add(v)
+        q.append(v)
+  return seen
+
+def suspicious_unreachable(graph, gateway, discovered_hosts):
+  reachable = bfs_component(graph, gateway)
+  return sorted([h for h in discovered_hosts if h not in reachable])
+
+def sparkline(values, width=50):
+  if not values:
+    return ''
+  lo, hi = min(values), max(values)
+  span = (hi - lo) or 1.0
+  bars = ' .:-=+*#%@'
+  if len(values) > width:
+    step = len(values) / width
+    values = [values[int(i * step)] for i in range(width)]
+  out = []
+  for v in values:
+    idx = int((v - lo) / span * (len(bars) - 1))
+    out.append(bars[idx])
+  return ''.join(out)
+
+def anomaly_windows(values, z=3.0):
+  if not values:
+    return []
+  mean = sum(values) / len(values)
+  var = sum((x - mean) ** 2 for x in values) / max(len(values), 1)
+  sd = var ** 0.5
+  if sd == 0:
+    return []
+  return [i for i, x in enumerate(values) if abs(x - mean) > z * sd]
+
+# usage:
+# ghosts = ghost_nodes(['192.168.1.1','192.168.1.47'], ['192.168.1.1'])
+# print('ghosts:', ghosts)
+# vals = [20,20,21,20,55,56,54,21,20]
+# print('sensor trend:', sparkline(vals))
+# print('anomaly idx:', anomaly_windows(vals))</div>
+        </div>
+
+      </section>
+
+    <section class="panel" id="quiz">
+      <div class="panel-head">
+        <h2>Pre-Event Quick Reference & Checklist</h2>
+        <p>Final reminders and key facts to review before the event. Print this or memorize the essentials.</p>
+      </div>
+      
+      <div class="card">
+        <h3>Pre-Event Mental Checklist (90 seconds before start)</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Knowledge Check</h4>
+            <ul>
+              <li>✓ Caesar all 25 shifts instantly</li>
+              <li>✓ Recognize Base64 (= padding)</li>
+              <li>✓ BFS/DFS for graphs</li>
+              <li>✓ Min/max/anomaly for arrays</li>
+              <li>✓ LED polarity matters</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Speed Check</h4>
+            <ul>
+              <li>✓ Classify in 10 seconds</li>
+              <li>✓ Extract hard facts first</li>
+              <li>✓ Make 2-3 hypotheses max</li>
+              <li>✓ Test cheapest idea first</li>
+              <li>✓ Validate before submit</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Team Sync</h4>
+            <ul>
+              <li>✓ Role assignments clear</li>
+              <li>✓ Communication protocol set</li>
+              <li>✓ Answer template memorized</li>
+              <li>✓ Tools tested and working</li>
+              <li>✓ Backup communication ready</li>
+            </ul>
+          </div>
+          <div class="info-box">
+            <h4>Common Traps (Don't Fall In)</h4>
+            <ul>
+              <li>✗ Solving without validation</li>
+              <li>✗ Using correct command on wrong target</li>
+              <li>✗ Ignoring clue dependency chain</li>
+              <li>✗ No clear evidence recorded</li>
+              <li>✗ Rushing final answer formatting</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Core Facts To Know Cold</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Caesar Cipher</h4>
+            <p>26 letters, try all shifts 1-25. Pattern: "DWWDFN" shift 3 = "ATTACK"</p>
+          </div>
+          <div class="info-box">
+            <h4>Base64 Signature</h4>
+            <p>Ends with = or ==. Alphabet: A-Z, a-z, 0-9, +/. Always try it.</p>
+          </div>
+          <div class="info-box">
+            <h4>Graph BFS</h4>
+            <p>Unweighted shortest path. Queue-based. O(V+E). Level-order traversal.</p>
+          </div>
+          <div class="info-box">
+            <h4>Array Anomaly</h4>
+            <p>Threshold: |value - mean| > 3*sigma. Or obvious jumps.</p>
+          </div>
+          <div class="info-box">
+            <h4>LED Polarity</h4>
+            <p>Cathode (short leg, flat edge) to GND. Anode (long leg) to power.</p>
+          </div>
+          <div class="info-box">
+            <h4>Debug Order</h4>
+            <p>Reproduce → Isolate → Patch → Verify → Regression check.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Final Answer Template (Copy This)</h3>
+        <div class="mono">Pattern identified: [what you found]
+Method used: [how you found it]
+Evidence line: [one proof]
+Final answer: [the answer]
+Validation: [why you trust it]
+Safe next: [what to do after]</div>
+      </div>
+
+      <div class="card">
+        <h3>One-Line Memotypes To Absorb</h3>
+        <ul>
+          <li><strong>Cryptography:</strong> Format hints → method. ROT13 is Caesar+13. Layers: decode first, then check output.</li>
+          <li><strong>Graphs:</strong> Nodes + edges. BFS for unweighted shortest path. DFS for reachability and traversal order.</li>
+          <li><strong>Arrays:</strong> Min/max/mean/sigma. Spikes are outliers. Drifts are trends. Flatlines are stuck.</li>
+          <li><strong>Electronics:</strong> VCC/GND/polarity/continuity/pin. Test one thing at a time. Replace only after isolation.</li>
+          <li><strong>Debugging:</strong> Smallest failure first. Follow data flow. Assumptions are first suspects. Test assumptions one at a time.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>19-Hour Night Operating Plan (Execution Rhythm)</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Hour 0-2: Fast Harvest</h4>
+            <p>Collect low-hanging points first: obvious decode, direct command-output questions, basic anomaly detection. Build momentum and confidence.</p>
+          </div>
+          <div class="info-box">
+            <h4>Hour 2-6: Core Solve Window</h4>
+            <p>Attack medium complexity tasks. Use strict 5-minute checkpoint rule: if no progress, park and rotate to another task.</p>
+          </div>
+          <div class="info-box">
+            <h4>Hour 6-10: Deep Puzzle Slot</h4>
+            <p>Reserve this window for layered ciphers, mixed hardware+data tasks, and graph-heavy clues that need concentrated effort.</p>
+          </div>
+          <div class="info-box">
+            <h4>Hour 10-14: Recovery + Sweep</h4>
+            <p>Revisit parked questions using fresh eyes. Re-run assumptions, validate older outputs, and clean up near-complete answers.</p>
+          </div>
+          <div class="info-box">
+            <h4>Hour 14-17: Final Push</h4>
+            <p>Prioritize questions with highest confidence-to-time ratio. Avoid starting long uncertain branches unless score gain is clear.</p>
+          </div>
+          <div class="info-box">
+            <h4>Hour 17-19: Submission Hardening</h4>
+            <p>Verify format, spelling, units, and evidence lines. Recheck every final answer against prompt constraints before final submit.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>When To Skip vs When To Commit (Score Maximizer)</h3>
+        <div style="background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; line-height: 1.85; font-size: 14px;">
+          <p><strong>Commit now</strong> if you have: clear pattern + known method + visible progress in under 90 seconds.</p>
+          <p><strong>Park temporarily</strong> if you have: uncertain type + no leverage clue + no progress after 5 minutes.</p>
+          <p><strong>Escalate to team</strong> if you have: one blocker requiring another role (hardware access, graph expertise, command context).</p>
+          <p><strong>Kill branch</strong> if you have: repeated outputs with no semantic meaning after two method pivots.</p>
+          <p><strong>Return later</strong> with explicit note: current state, tested methods, last output, and next test hypothesis.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Command Output Pattern Bank (Instant Interpretation)</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>nmap</h4>
+            <p><strong>Normal:</strong> expected hosts only.<br/><strong>Suspicious:</strong> unknown host in same subnet.<br/><strong>Action:</strong> ARP map + service fingerprint.</p>
+          </div>
+          <div class="info-box">
+            <h4>arp</h4>
+            <p><strong>Normal:</strong> known MAC vendors.<br/><strong>Suspicious:</strong> unknown OUI or duplicate MAC behavior.<br/><strong>Action:</strong> isolate host and verify route.</p>
+          </div>
+          <div class="info-box">
+            <h4>netstat</h4>
+            <p><strong>Normal:</strong> expected service ports only.<br/><strong>Suspicious:</strong> odd listener (4444, high random ports).<br/><strong>Action:</strong> map PID to process and kill if malicious.</p>
+          </div>
+          <div class="info-box">
+            <h4>top / process list</h4>
+            <p><strong>Normal:</strong> stable known processes.<br/><strong>Suspicious:</strong> hidden path with extreme CPU.<br/><strong>Action:</strong> capture process info before termination.</p>
+          </div>
+          <div class="info-box">
+            <h4>ping / latency</h4>
+            <p><strong>Normal:</strong> low stable RTT.<br/><strong>Suspicious:</strong> sharp jitter bursts or packet loss windows.<br/><strong>Action:</strong> correlate with timeline of anomalies.</p>
+          </div>
+          <div class="info-box">
+            <h4>logs / auth traces</h4>
+            <p><strong>Normal:</strong> expected account patterns.<br/><strong>Suspicious:</strong> repeated failed auth then success from odd source.<br/><strong>Action:</strong> flag source + time + target account.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Mini Math & Logic Toolkit (Zero-Delay Recall)</h3>
+        <div class="info-grid">
+          <div class="info-box">
+            <h4>Mean</h4>
+            <p>mean = sum(values) / n. Use for baseline before spotting drift/spike behavior.</p>
+          </div>
+          <div class="info-box">
+            <h4>Outlier Rule</h4>
+            <p>Flag candidate if |x - mean| &gt; 3*sigma. Confirm with neighboring points before final call.</p>
+          </div>
+          <div class="info-box">
+            <h4>BFS Use</h4>
+            <p>Shortest path in unweighted graph. Keep parent map to reconstruct exact path answer.</p>
+          </div>
+          <div class="info-box">
+            <h4>DFS Use</h4>
+            <p>Reachability/cycle checks. Good for traversal order and component detection.</p>
+          </div>
+          <div class="info-box">
+            <h4>Hex ASCII Band</h4>
+            <p>0x41-0x5A uppercase, 0x61-0x7A lowercase, 0x30-0x39 digits, 0x20 space.</p>
+          </div>
+          <div class="info-box">
+            <h4>Binary Byte</h4>
+            <p>Read as 8-bit groups. Mis-grouped bits are the most common conversion error at speed.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Fatigue-Proof Team Protocol (Use During Night)</h3>
+        <div style="background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; line-height: 1.85; font-size: 14px;">
+          <p><strong>Update format every 20-30 min:</strong> "Question ID → status → blocker → next test → owner".</p>
+          <p><strong>Handoff format:</strong> "What I tried, what failed, latest output, best next step".</p>
+          <p><strong>Conflict resolution:</strong> choose method with faster falsifiable test, not louder opinion.</p>
+          <p><strong>Energy rule:</strong> if one member loops on same branch for 12+ min, mandatory role swap.</p>
+          <p><strong>Final 90-min rule:</strong> no risky new deep branches; finish, verify, and submit clean answers.</p>
+        </div>
+      </div>
+    </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openPanel(id, el) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      el.classList.add('active');
+    }
+
+    function openPanelById(id) {
+      const tab = document.querySelector(`.tab[data-panel="${id}"]`);
+      if (tab) openPanel(id, tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function filterGuide() {
+      const q = document.getElementById('guide-search').value.trim().toLowerCase();
+      const blocks = document.querySelectorAll('.card, .pillar, .mentor-chip');
+      let visible = 0;
+      blocks.forEach(b => {
+        const hit = !q || b.textContent.toLowerCase().includes(q);
+        b.style.display = hit ? '' : 'none';
+        if (hit) visible++;
+      });
+      const note = document.getElementById('search-note');
+      note.textContent = q ? `Found ${visible} matching guide blocks.` : 'Search across all guide cards instantly.';
+    }
+
+    const morseRev = {
+      '.-':'A','-...':'B','-.-.':'C','-..':'D','.':'E','..-.':'F','--.':'G','....':'H','..':'I','.---':'J','-.-':'K','.-..':'L','--':'M','-.':'N','---':'O','.--.':'P','--.-':'Q','.-.':'R','...':'S','-':'T','..-':'U','...-':'V','.--':'W','-..-':'X','-.--':'Y','--..':'Z'
+    };
+
+    function decodeAsciiDecimal(input) {
+      return input.split('/').map(part => {
+        const codes = part.trim().split(/[\s,]+/).filter(Boolean);
+        if (!codes.length) return '';
+        return codes.map(code => {
+          if (!/^\d+$/.test(code)) throw new Error('Invalid ASCII code: ' + code);
+          const value = Number(code);
+          if (value < 0 || value > 255) throw new Error('ASCII code out of range: ' + code);
+          return String.fromCharCode(value);
+        }).join('');
+      }).filter(Boolean).join(' ');
+    }
+
+    function decodeCipher() {
+      const type = document.getElementById('cipher-type').value;
+      const input = document.getElementById('cipher-input').value.trim();
+      const out = document.getElementById('cipher-out');
+      if (!input) { out.textContent = 'Enter input first.'; return; }
+      try {
+        if (type === 'caesar') {
+          let lines = [];
+          for (let s = 1; s <= 25; s++) {
+            const d = input.toUpperCase().split('').map(c => {
+              if (c >= 'A' && c <= 'Z') return String.fromCharCode((c.charCodeAt(0)-65 + (26-s)) % 26 + 65);
+              return c;
+            }).join('');
+            lines.push('shift ' + s + ': ' + d);
+          }
+          out.textContent = lines.join('\n');
+          return;
+        }
+        if (type === 'rot13') {
+          out.textContent = input.replace(/[a-zA-Z]/g, c => {
+            const a = c <= 'Z' ? 65 : 97;
+            return String.fromCharCode((c.charCodeAt(0)-a+13)%26 + a);
+          });
+          return;
+        }
+        if (type === 'base64') { out.textContent = atob(input); return; }
+        if (type === 'binary') { out.textContent = input.split(/\s+/).map(b => String.fromCharCode(parseInt(b,2))).join(''); return; }
+        if (type === 'hex') { out.textContent = input.replace(/\s+/g,'').match(/.{1,2}/g).map(h => String.fromCharCode(parseInt(h,16))).join(''); return; }
+        if (type === 'morse') {
+          out.textContent = input.split(' / ').map(w => w.split(' ').map(x => morseRev[x] || '?').join('')).join(' ');
+          return;
+        }
+        if (type === 'ascii') {
+          out.textContent = decodeAsciiDecimal(input);
+          return;
+        }
+      } catch (e) {
+        out.textContent = 'Could not decode. Check format.';
+      }
+    }
+
+    // Advanced Cipher Tools (for Cipher Tools panel)
+    function advDecodeCipher() {
+      const type = document.getElementById('adv-cipher-type').value;
+      const input = document.getElementById('adv-cipher-input').value.trim();
+      const out = document.getElementById('adv-cipher-out');
+      if (!input) { out.textContent = '→ Enter input first.'; return; }
+      try {
+        if (type === 'caesar') {
+          let lines = ['CAESAR CIPHER - All 25 Shifts:\n' + '='.repeat(60) + '\n'];
+          for (let s = 1; s <= 25; s++) {
+            const d = input.toUpperCase().split('').map(c => {
+              if (c >= 'A' && c <= 'Z') return String.fromCharCode((c.charCodeAt(0)-65 + (26-s)) % 26 + 65);
+              return c;
+            }).join('');
+            lines.push('Shift ' + s.toString().padStart(2, '0') + ': ' + d);
+          }
+          out.textContent = lines.join('\n');
+          return;
+        }
+        if (type === 'rot13') {
+          const result = input.replace(/[a-zA-Z]/g, c => {
+            const a = c <= 'Z' ? 65 : 97;
+            return String.fromCharCode((c.charCodeAt(0)-a+13)%26 + a);
+          });
+          out.textContent = '✓ ROT13 Decoded:\n' + '='.repeat(60) + '\n\n' + result;
+          return;
+        }
+        if (type === 'base64') { 
+          const result = atob(input);
+          out.textContent = '✓ Base64 Decoded:\n' + '='.repeat(60) + '\n\n' + result;
+          return; 
+        }
+        if (type === 'binary') { 
+          const result = input.split(/\s+/).map(b => String.fromCharCode(parseInt(b,2))).join('');
+          out.textContent = '✓ Binary Decoded:\n' + '='.repeat(60) + '\n\n' + result;
+          return; 
+        }
+        if (type === 'hex') { 
+          const result = input.replace(/\s+/g,'').match(/.{1,2}/g).map(h => String.fromCharCode(parseInt(h,16))).join('');
+          out.textContent = '✓ Hex Decoded:\n' + '='.repeat(60) + '\n\n' + result;
+          return; 
+        }
+        if (type === 'morse') {
+          const result = input.split(' / ').map(w => w.split(' ').map(x => morseRev[x] || '?').join('')).join(' ');
+          out.textContent = '✓ Morse Decoded:\n' + '='.repeat(60) + '\n\n' + result;
+          return;
+        }
+        if (type === 'ascii') {
+          const result = decodeAsciiDecimal(input);
+          out.textContent = '✓ ASCII Decimal Decoded:\n' + '='.repeat(60) + '\n\n' + result;
+          return;
+        }
+      } catch (e) {
+        out.textContent = '❌ Decoding failed.\n\nCheck format:\n• Caesar/ROT13: Letters only\n• Base64: Must end with = or ==\n• Binary: Space-separated 8-bit bytes\n• Hex: Two-digit pairs or continuous\n• Morse: Dots/dashes with space/slash separators\n• ASCII Decimal: numbers like 72 101 108 / 85 115\n\nError: ' + e.message;
+      }
+    }
+
+    function advClearCipher() {
+      document.getElementById('adv-cipher-input').value = '';
+      document.getElementById('adv-cipher-out').textContent = 'Decoded output appears here. • Press Ctrl+Enter to decode • Results are copyable';
+      document.getElementById('adv-cipher-input').focus();
+    }
+
+    function advCopyCipher() {
+      const out = document.getElementById('adv-cipher-out');
+      const text = out.textContent;
+      if (!text || text.startsWith('Decoded output')) {
+        alert('Nothing to copy. Decode first.');
+        return;
+      }
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = orig; }, 2000);
+      }).catch(() => {
+        alert('Copy failed. Try Ctrl+C on the output box.');
+      });
+    }
+
+    const sensorCases = [
+      { c: 'Case: Value stuck at 23.4 for 120 readings.', a: 'flatline' },
+      { c: 'Case: Values 20.1 -> 20.9 -> 21.7 -> ... -> 35.2', a: 'drift' },
+      { c: 'Case: One point jumps to 98.4 then returns immediately.', a: 'spike' },
+      { c: 'Case: 10 consecutive values shift to impossible level then return.', a: 'injection' },
+      { c: 'Case: Variations stay in normal expected band all timeline long.', a: 'normal' }
+    ];
+    let sensorI = 0;
+    // Dummy functions kept for compatibility (no longer used)
+    function newSensorCase() {}
+    function showSensorAnswer() {}
+    let hwI = 0;
+    function nextHwCase() {}
+    function revealHw() {}
+
+    const cmdMap = {
+      nmap: {
+        out: 'Nmap scan report for 192.168.1.1\nNmap scan report for 192.168.1.12\nNmap scan report for 192.168.1.47  <- unauthorized\nNmap scan report for 192.168.1.100',
+        note: 'Ghost node candidate: 192.168.1.47. Validate via ARP and service scan.'
+      },
+      arp: {
+        out: '? (192.168.1.47) at 00:11:22:de:ad:be [ether] on eth0',
+        note: 'MAC prefix (OUI) helps identify manufacturer of unknown device.'
+      },
+      netstat: {
+        out: 'tcp 0 0 0.0.0.0:22 LISTEN\ntcp 0 0 0.0.0.0:80 LISTEN\ntcp 0 0 0.0.0.0:4444 LISTEN <- red flag',
+        note: 'Port 4444 can indicate backdoor activity in challenge scenarios.'
+      },
+      top: {
+        out: 'PID 1234 /tmp/.hidden/miner %CPU 94.3',
+        note: 'High CPU unknown process: capture PID, kill process, inspect persistence.'
+      }
+    };
+    function showCmd(k) {
+      document.getElementById('cmd-out').textContent = cmdMap[k].out;
+      document.getElementById('cmd-note').textContent = cmdMap[k].note;
+    }
+
+    function analyzeIpIntel() {
+      const input = document.getElementById('ip-intel-input').value.trim();
+      const out = document.getElementById('ip-intel-out');
+      if (!input) {
+        out.textContent = 'Enter an IPv4 address first.';
+        return;
+      }
+
+      const parts = input.split('.');
+      if (parts.length !== 4) {
+        out.textContent = 'Invalid format. Use dotted IPv4 format like 192.168.1.47.';
+        return;
+      }
+
+      const nums = parts.map(p => Number(p));
+      if (nums.some(n => !Number.isInteger(n) || n < 0 || n > 255)) {
+        out.textContent = 'Invalid IPv4 range. Each octet must be 0-255.';
+        return;
+      }
+
+      const [a, b, c, d] = nums;
+      const ip = nums.join('.');
+      let classification = 'Public IPv4';
+      let riskSignal = 'Potential external source. Validate ownership and behavior immediately.';
+      let nextStep = 'Check listener ports, active sessions, and associated process tree.';
+
+      if (a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168)) {
+        classification = 'Private IPv4 (RFC1918)';
+        riskSignal = 'Internal address. Suspicious only if unauthorized, rogue, or behaviorally abnormal.';
+        nextStep = 'Compare against authorized host inventory, then inspect services and logs.';
+      } else if (a === 127) {
+        classification = 'Loopback';
+        riskSignal = 'Local-only path. Usually indicates local process/service issue, not remote attacker origin.';
+        nextStep = 'Inspect local service bindings and process ownership.';
+      } else if (a === 169 && b === 254) {
+        classification = 'Link-local (APIPA)';
+        riskSignal = 'Often DHCP failure or isolated interface state.';
+        nextStep = 'Check DHCP, NIC state, cable/link, and interface configuration.';
+      } else if (a === 100 && b >= 64 && b <= 127) {
+        classification = 'Carrier-grade NAT range';
+        riskSignal = 'Attribution can be ambiguous without extra session context.';
+        nextStep = 'Use timestamp + source port + service logs for reliable attribution.';
+      } else if (a >= 224 && a <= 239) {
+        classification = 'Multicast range';
+        riskSignal = 'Not standard host traffic for compromise tracing.';
+        nextStep = 'Confirm whether multicast is expected in this challenge topology.';
+      } else if (a === 255 && b === 255 && c === 255 && d === 255) {
+        classification = 'Broadcast address';
+        riskSignal = 'Frequent appearance can indicate misconfiguration or noisy scan behavior.';
+        nextStep = 'Check switch/router logs for broadcast storms and misconfigured clients.';
+      } else if ((a === 192 && b === 0 && c === 2) || (a === 198 && b === 51 && c === 100) || (a === 203 && b === 0 && c === 113)) {
+        classification = 'Documentation/Test-Net range';
+        riskSignal = 'Usually synthetic/demo traffic. Treat as challenge artifact unless stated otherwise.';
+        nextStep = 'Confirm whether the puzzle intentionally uses test-net addresses.';
+      }
+
+      const wicketPriority = (classification === 'Public IPv4' || classification === 'Documentation/Test-Net range')
+        ? 'High review priority'
+        : 'Standard review priority';
+
+      out.textContent =
+        'IP: ' + ip + '\n' +
+        'Classification: ' + classification + '\n' +
+        '3AM Wicket Priority: ' + wicketPriority + '\n' +
+        'Risk Signal: ' + riskSignal + '\n' +
+        'Immediate Next Step: ' + nextStep;
+    }
+
+    // Quiz functions removed - converted to static reference guide
+
+    // Keyboard shortcuts for cipher tools
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'Enter') {
+        const activeInput = document.getElementById('adv-cipher-input');
+        if (activeInput && activeInput === document.activeElement) {
+          advDecodeCipher();
+          e.preventDefault();
+        }
+      }
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Focus cipher input when panel opens
+      const advInput = document.getElementById('adv-cipher-input');
+      if (advInput) advInput.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
+          advDecodeCipher();
+          e.preventDefault();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
